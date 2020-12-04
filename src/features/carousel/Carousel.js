@@ -5,13 +5,20 @@ import {
   deselectImage,
   removeSelectedImages,
   getActiveImages,
-  getSize
+  getSize,
+  setSelectedImage
 } from "./carouselSlice";
+import {
+  setEditMode,
+  setViewMode,
+  getMode
+} from "../editor/editorSlice";
 import styles from "./Carousel.module.css";
 
 export function Carousel() {
   const activeImages = useSelector(getActiveImages);
   const carouselSize = useSelector(getSize);
+  const editorMode = useSelector(getMode);
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
@@ -28,7 +35,11 @@ export function Carousel() {
    *******************************/
 
   function handleToggleSelect(imageName, isSelected) {
-    isSelected ? dispatch(deselectImage(imageName)) : dispatch(selectImage(imageName))
+    if (editorMode === 'view') {
+      dispatch(setSelectedImage(imageName));
+    } else {
+      isSelected ? dispatch(deselectImage(imageName)) : dispatch(selectImage(imageName))
+    }
   }
 
   function handleRemoveImages() {
@@ -71,10 +82,6 @@ export function Carousel() {
     );
   }
 
-  function renderRemoveButton() {
-    return <button onClick={handleRemoveImages}>Remove</button>
-  }
-
   function renderPaginationControls() {
     let paginationButtons = [];
     for (let i = 0; i < lastPage(); i++) {
@@ -91,14 +98,20 @@ export function Carousel() {
     )
   }
 
+  function renderEditorToolbar() {
+    return (
+      <div>
+        <button onClick={handleRemoveImages}>Remove</button>
+      </div>
+    )
+  }
+
   if (activeImages.length === 0) {
-    return <div>Add images from above to see them in the Carousel</div>
+    return <div>This carousel is empty</div>
   } else {
     return (
       <div>
-        <div>
-          {renderRemoveButton()}
-        </div>
+        {editorMode === "edit" && renderEditorToolbar()}
         {renderCarousel()}
         {renderPaginationControls()}
       </div>
