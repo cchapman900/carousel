@@ -8,6 +8,7 @@ import {
   getSize,
   setSelectedImage,
   setSize,
+  getSelectedImages,
 } from "./carouselSlice";
 import { getMode } from "../editor/editorSlice";
 import styles from "./Carousel.module.css";
@@ -17,6 +18,7 @@ export function Carousel() {
   const availableCarouselSizes = [2, 3, 4, 5];
 
   const activeImages = useSelector(getActiveImages);
+  const selectedImages = useSelector(getSelectedImages);
   const carouselSize = useSelector(getSize);
   const editorMode = useSelector(getMode);
   const dispatch = useDispatch();
@@ -134,7 +136,7 @@ export function Carousel() {
           </select>
         </div>
         <div style={{float: 'right'}}>
-          <button onClick={handleRemoveImages}>Remove</button>
+          <button disabled={selectedImages.length === 0} onClick={handleRemoveImages}>Delete</button>
         </div>
       </div>
     );
