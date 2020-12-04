@@ -16,9 +16,10 @@ export const carouselSlice = createSlice({
     /**
      * Add image to selectedImages (multi-select) from an image name
      */
-    selectImage: (state, {imageName}) => {
+    selectImage: (state, action) => {
+      console.log('Select image', action)
       state.images = state.images.map((image) => {
-        if (image.key === imageName) {
+        if (image.imageName === action.payload) {
           return {...image, isSelected: true}
         } else {
           return image
@@ -28,9 +29,9 @@ export const carouselSlice = createSlice({
     /**
      * Set a single image to selected
      */
-    setSelectedImage: (state, {imageName}) => {
+    setSelectedImage: (state, action) => {
       state.images = state.images.map((image) => {
-        if (image.key === imageName) {
+        if (image.imageName === action.payload) {
           return {...image, isSelected: true}
         } else {
           return {...image, isSelected: false}
@@ -41,9 +42,10 @@ export const carouselSlice = createSlice({
      * Clear selected images from array of imageNames.
      * If imageNames array is not provided, clear all.
      */
-    deselectImages: (state, {imageNames} = []) => {
+    deselectImage: (state, action = []) => {
+      console.log('Deselect image', action.payload)
       const selectedImages = state.images.map((image) => {
-        if (imageNames.includes(image.name)) {
+        if (image.imageName === action.payload) {
           return {...image, isSelected: false}
         } else {
           return image
@@ -54,10 +56,10 @@ export const carouselSlice = createSlice({
     /**
      * Add images to carousel from available images, using imageName as the key
      */
-    addImages: (state, {imageNames}) => {
+    addSelectedImages: (state) => {
       state.images = state.images.map((image) => {
-        if (imageNames.includes(image.imageName)) {
-          return {...image, isActive: true}
+        if (image.isSelected) {
+          return {...image, isActive: true, isSelected: false}
         } else {
           return image
         }
@@ -66,9 +68,9 @@ export const carouselSlice = createSlice({
     /**
      * Remove images from carousel
      */
-    removeImages: (state, {imageNames}) => {
+    removeSelectedImages: (state, action) => {
       state.images = state.images.map((image) => {
-        if (imageNames.includes(image.imageName)) {
+        if (action.payload.includes(image.imageName)) {
           return {...image, isActive: false}
         } else {
           return image
@@ -78,13 +80,13 @@ export const carouselSlice = createSlice({
     /**
      * Set the number of images at a time to show in the Carousel
      */
-    setSize: (state, {size}) => {
-      state.size = size
+    setSize: (state, action) => {
+      state.size = action.payload
     }
   },
 });
 
-export const { selectImage, setSelectedImage, deselectImages, addImages, removeImages, setSize } = carouselSlice.actions;
+export const { selectImage, setSelectedImage, deselectImage, addSelectedImages, removeSelectedImages, setSize } = carouselSlice.actions;
 
 export const selectActiveImages = (state) => {
   return state.carousel.images.filter((image) => {
