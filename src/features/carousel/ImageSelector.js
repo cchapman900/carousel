@@ -4,12 +4,12 @@ import {
   selectImage,
   deselectImage,
   addSelectedImages,
-  selectInactiveImages,
+  getInactiveImages,
 } from "./carouselSlice";
 import styles from "./Carousel.module.css";
 
 export function ImageSelector() {
-  const inactiveImages = useSelector(selectInactiveImages);
+  const inactiveImages = useSelector(getInactiveImages);
   const dispatch = useDispatch();
 
   /*******************************
