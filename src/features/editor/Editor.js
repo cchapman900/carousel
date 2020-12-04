@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  clearSelectedImages,
+  setSelectedImage,
+  getActiveImages,
+} from "../carousel/carouselSlice";
 import { setEditMode, setViewMode, getMode } from "./editorSlice";
-import styles from "./Editor.module.css";
 import { ImageSelector } from "../carousel/ImageSelector";
+import { ImageViewer } from "../carousel/ImageViewer";
 import { Carousel } from "../carousel/Carousel";
 
 export function Editor() {
   const mode = useSelector(getMode);
+  const activeImages = useSelector(getActiveImages);
   const dispatch = useDispatch();
+
+  /*******************************
+   * HANDLER METHODS
+   *******************************/
+  function handleSetEditMode() {
+    dispatch(clearSelectedImages());
+    dispatch(setEditMode());
+  }
+  function handleSetViewMode() {
+    dispatch(clearSelectedImages());
+    dispatch(setSelectedImage(activeImages[0]));
+    dispatch(setViewMode());
+  }
 
   /*******************************
    * RENDER METHODS
@@ -15,9 +34,9 @@ export function Editor() {
 
   function renderEditorToolbar() {
     return mode === "view" ? (
-      <button onClick={() => dispatch(setEditMode())}>Edit</button>
+      <button onClick={handleSetEditMode}>Edit</button>
     ) : (
-      <button onClick={() => dispatch(setViewMode())}>View</button>
+      <button onClick={handleSetViewMode}>View</button>
     );
   }
 
@@ -28,6 +47,7 @@ export function Editor() {
       <hr />
       <Carousel />
       <hr />
+      {mode === "view" && <ImageViewer />}
     </div>
   );
 }

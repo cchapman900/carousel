@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectImage,
@@ -6,16 +6,16 @@ import {
   removeSelectedImages,
   getActiveImages,
   getSize,
-  setSelectedImage
+  setSelectedImage,
+  setSize,
 } from "./carouselSlice";
-import {
-  setEditMode,
-  setViewMode,
-  getMode
-} from "../editor/editorSlice";
+import { getMode } from "../editor/editorSlice";
 import styles from "./Carousel.module.css";
 
 export function Carousel() {
+
+  const availableCarouselSizes = [2, 3, 4, 5];
+
   const activeImages = useSelector(getActiveImages);
   const carouselSize = useSelector(getSize);
   const editorMode = useSelector(getMode);
@@ -28,22 +28,28 @@ export function Carousel() {
    *******************************/
   const lastPage = () => {
     return Math.ceil(activeImages.length / carouselSize);
-  }
+  };
 
   /*******************************
    * HANDLER METHODS
    *******************************/
 
   function handleToggleSelect(imageName, isSelected) {
-    if (editorMode === 'view') {
+    if (editorMode === "view") {
       dispatch(setSelectedImage(imageName));
     } else {
-      isSelected ? dispatch(deselectImage(imageName)) : dispatch(selectImage(imageName))
+      isSelected
+        ? dispatch(deselectImage(imageName))
+        : dispatch(selectImage(imageName));
     }
   }
 
   function handleRemoveImages() {
-    dispatch(removeSelectedImages())
+    dispatch(removeSelectedImages());
+  }
+
+  function handleSetCarouselSize(event) {
+    dispatch(setSize(event.target.value))
   }
 
   /*******************************
@@ -52,15 +58,15 @@ export function Carousel() {
 
   function renderCarousel() {
     let carouselImages = [];
-    for (let i = page * carouselSize; i < page * carouselSize + carouselSize; i++) {
+    for (
+      let i = page * carouselSize;
+      i < page * carouselSize + carouselSize;
+      i++
+    ) {
       const slot = activeImages[i];
-      slot && carouselImages.push(renderCarouselImage(activeImages[i]))
+      slot && carouselImages.push(renderCarouselImage(activeImages[i]));
     }
-    return (
-      <div className={styles.carouselContainer}>
-        {carouselImages}
-      </div>
-    )
+    return <div className={styles.carouselContainer}>{carouselImages}</div>;
   }
 
   function renderCarouselImage({ imageName, imageCaption, isSelected }) {
@@ -73,9 +79,9 @@ export function Carousel() {
         <img
           src={`/images/${imageName}`}
           alt={imageCaption}
-          height={500/carouselSize}
-          width={500/carouselSize}
-          className={isSelected ? styles.imageSelectContainerSelected : ''}
+          height={500 / carouselSize}
+          width={500 / carouselSize}
+          className={isSelected ? styles.imageSelectContainerSelected : ""}
         />
         <figcaption>{imageCaption}</figcaption>
       </figure>
@@ -86,28 +92,56 @@ export function Carousel() {
     let paginationButtons = [];
     for (let i = 0; i < lastPage(); i++) {
       paginationButtons.push(
-        <button style={i === page ? {color: 'white'} : {}} onClick={() => setPage(i)}>&#8226;</button>
-      )
+        <button
+          key={`pagination-button-${i}`}
+          style={i === page ? { color: "white" } : {}}
+          onClick={() => setPage(i)}
+        >
+          &#8226;
+        </button>
+      );
     }
     return (
       <div>
-        <button disabled={page === 0} onClick={() => setPage(page - 1)}>Prev</button>
+        <button disabled={page === 0} onClick={() => setPage(page - 1)}>
+          Prev
+        </button>
         {paginationButtons}
-        <button disabled={page >= lastPage() - 1} onClick={() => setPage(page + 1)}>Next</button>
+        <button
+          disabled={page >= lastPage() - 1}
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </button>
       </div>
-    )
+    );
   }
 
   function renderEditorToolbar() {
+    const options = availableCarouselSizes.map(size => {
+      return(
+        <option key={`option-${size}`} value={size}>
+          {size}
+        </option>
+      )
+    });
     return (
       <div>
-        <button onClick={handleRemoveImages}>Remove</button>
+        <div style={{float: 'left'}}>
+          <label>Carousel size</label>
+          <select onChange={handleSetCarouselSize} defaultValue={carouselSize}>
+            {options}
+          </select>
+        </div>
+        <div style={{float: 'right'}}>
+          <button onClick={handleRemoveImages}>Remove</button>
+        </div>
       </div>
-    )
+    );
   }
 
   if (activeImages.length === 0) {
-    return <div>This carousel is empty</div>
+    return <div>This carousel is empty</div>;
   } else {
     return (
       <div>

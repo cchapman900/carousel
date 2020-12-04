@@ -1,16 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-import {carouselImages} from '../../data/carouselImages.json';
+import { carouselImages } from "../../data/carouselImages.json";
 
 export const carouselSlice = createSlice({
-  name: 'carousel',
+  name: "carousel",
   initialState: {
     size: 3,
     // Add isActive field to show if an images should be shown in the carousel,
     // and an isSelected field if it is selected in either of the modes
     images: carouselImages.map((carouselImage) => {
-      return {...carouselImage, isSelected: false, isActive: false}
-    })
+      return { ...carouselImage, isSelected: false, isActive: false };
+    }),
   },
   reducers: {
     /**
@@ -19,9 +19,9 @@ export const carouselSlice = createSlice({
     selectImage: (state, action) => {
       state.images = state.images.map((image) => {
         if (image.imageName === action.payload) {
-          return {...image, isSelected: true}
+          return { ...image, isSelected: true };
         } else {
-          return image
+          return image;
         }
       });
     },
@@ -31,25 +31,32 @@ export const carouselSlice = createSlice({
     setSelectedImage: (state, action) => {
       state.images = state.images.map((image) => {
         if (image.imageName === action.payload) {
-          return {...image, isSelected: true}
+          return { ...image, isSelected: true };
         } else {
-          return {...image, isSelected: false}
+          return { ...image, isSelected: false };
         }
       });
     },
     /**
      * Clear selected images from array of imageNames.
-     * If imageNames array is not provided, clear all.
      */
-    deselectImage: (state, action = []) => {
-      console.log('Deselect image', action.payload)
+    deselectImage: (state, action) => {
       const selectedImages = state.images.map((image) => {
         if (image.imageName === action.payload) {
-          return {...image, isSelected: false}
+          return { ...image, isSelected: false };
         } else {
-          return image
+          return image;
         }
-      })
+      });
+      state.images = selectedImages;
+    },
+    /**
+     * Clear selected images
+     */
+    clearSelectedImages: (state, action = null) => {
+      const selectedImages = state.images.map((image) => {
+        return { ...image, isSelected: false };
+      });
       state.images = selectedImages;
     },
     /**
@@ -58,68 +65,99 @@ export const carouselSlice = createSlice({
     addSelectedImages: (state) => {
       state.images = state.images.map((image) => {
         if (image.isSelected) {
-          return {...image, isActive: true, isSelected: false}
+          return { ...image, isActive: true, isSelected: false };
         } else {
-          return image
+          return image;
         }
-      })
+      });
     },
     /**
      * Remove images from carousel
      */
     removeSelectedImages: (state, action) => {
-      console.log(action.payload)
       state.images = state.images.map((image) => {
         if (image.isSelected) {
-          return {...image, isActive: false, isSelected: false}
+          return { ...image, isActive: false, isSelected: false };
         } else {
-          return image
+          return image;
         }
         // if (action.payload.includes(image.imageName)) {
         //   return {...image, isActive: false}
         // } else {
         //   return image
         // }
-      })
+      });
     },
     /**
      * Set the number of images at a time to show in the Carousel
      */
     setSize: (state, action) => {
-      state.size = action.payload
-    }
+      state.size = action.payload;
+    },
   },
 });
 
-export const { selectImage, setSelectedImage, deselectImage, addSelectedImages, removeSelectedImages, setSize } = carouselSlice.actions;
+export const {
+  selectImage,
+  addSelectedImages,
+  setSelectedImage,
+  deselectImage,
+  clearSelectedImages,
+  removeSelectedImages,
+  setSize,
+} = carouselSlice.actions;
 
 export const getActiveImages = (state) => {
-  return state.carousel.images.filter((image) => {
-    return image.isActive === true;
-  }).sort((a, b) => {
-    return a.imageCaption < b.imageCaption ? -1 : 1;
+  return state.carousel.images
+    .filter((image) => {
+      return image.isActive === true;
+    })
+    .sort((a, b) => {
+      return a.imageCaption < b.imageCaption ? -1 : 1;
+    });
+};
+
+export const getInactiveImages = (state) =>
+  state.carousel.images
+    .filter((image) => {
+      return image.isActive === false;
+    })
+    .sort((a, b) => {
+      return a.imageCaption < b.imageCaption ? -1 : 1;
+    });
+
+  export const getSelectedImages = (state) =>
+    state.carousel.images
+      .filter((image) => {
+        return image.isSelected === true;
+      })
+      .sort((a, b) => {
+        return a.imageCaption < b.imageCaption ? -1 : 1;
+      });
+
+export const getSelectedImage = (state) => {
+  const activeImages = state.carousel.images
+    .filter((image) => {
+      return image.isActive === true;
+    })
+    .sort((a, b) => {
+      return a.imageCaption < b.imageCaption ? -1 : 1;
+    });
+  const selectedActiveImages = activeImages.filter((image) => {
+    return image.isSelected === true;
   });
-}
-
-
-export const getInactiveImages = state => state.carousel.images.filter((image) => {
-  return image.isActive === false;
-}).sort((a, b) => {
-  return a.imageCaption < b.imageCaption ? -1 : 1;
-});
-
-export const getSelectedImage = state => {
-  const selectedImages = state.carousel.images.filter((image) => {
-    return image.isActive === true;
-  });
-  if (selectedImages.length > 1) {
-    throw new Error('More than one selected image');
+  // if (selectedImages.length > 1) {
+  //   throw new Error('More than one selected image');
+  // }
+  if (selectedActiveImages.length > 0) {
+    return selectedActiveImages[0]
+  } else {
+    return activeImages[0] || null;
   }
-  return selectedImages[0] || null;
-}
+};
 
-export const getSize = state => {
+export const getSize = (state) => {
   return state.carousel.size;
-}
+};
 
 export default carouselSlice.reducer;

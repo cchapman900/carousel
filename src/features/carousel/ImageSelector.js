@@ -5,11 +5,13 @@ import {
   deselectImage,
   addSelectedImages,
   getInactiveImages,
+  getSelectedImages,
 } from "./carouselSlice";
 import styles from "./Carousel.module.css";
 
 export function ImageSelector() {
   const inactiveImages = useSelector(getInactiveImages);
+  const selectedImages = useSelector(getSelectedImages);
   const dispatch = useDispatch();
 
   /*******************************
@@ -48,7 +50,7 @@ export function ImageSelector() {
   }
 
   function renderAddButton() {
-    return <button onClick={handleAddImages}>Add</button>
+    return <button disabled={selectedImages.length === 0} onClick={handleAddImages}>Add</button>
   }
 
   return (
