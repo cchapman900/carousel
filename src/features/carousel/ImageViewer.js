@@ -15,7 +15,7 @@ export function ImageViewer() {
   return (
     <figure className={styles.imageViewerContainer}>
       <img src={`/images/${selectedImage.imageName}`} alt={selectedImage.imageCaption} width={500} height={500}/>
-      <figcaption>
+      <figcaption className={styles.imageViewerCaption}>
         {selectedImage.imageCaption}
       </figcaption>
     </figure>

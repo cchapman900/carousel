@@ -135,6 +135,24 @@ export const getInactiveImages = (state) =>
         return a.imageCaption < b.imageCaption ? -1 : 1;
       });
 
+  export const getSelectedInactiveImages = (state) =>
+    state.carousel.images
+      .filter((image) => {
+        return image.isSelected === true && image.isActive === false;
+      })
+      .sort((a, b) => {
+        return a.imageCaption < b.imageCaption ? -1 : 1;
+      });
+
+  export const getSelectedActiveImages = (state) =>
+    state.carousel.images
+      .filter((image) => {
+        return image.isSelected === true && image.isActive === true;
+      })
+      .sort((a, b) => {
+        return a.imageCaption < b.imageCaption ? -1 : 1;
+      });
+
 export const getSelectedImage = (state) => {
   const activeImages = state.carousel.images
     .filter((image) => {

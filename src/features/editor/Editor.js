@@ -34,19 +34,19 @@ export function Editor() {
 
   function renderEditorToolbar() {
     return mode === "view" ? (
-      <button onClick={handleSetEditMode}>Edit</button>
+      <button onClick={handleSetEditMode} className={'button'}>Edit</button>
     ) : (
-      <button onClick={handleSetViewMode}>View</button>
+      <button onClick={handleSetViewMode} className={'button'}>View</button>
     );
   }
 
   return (
-    <div>
-      {renderEditorToolbar()}
+    <div style={{margin: '16px 0'}}>
+      <div style={{textAlign: 'right'}}>
+        {renderEditorToolbar()}
+      </div>
       {mode === "edit" && <ImageSelector />}
-      <hr />
       <Carousel />
-      <hr />
       {mode === "view" && <ImageViewer />}
     </div>
   );

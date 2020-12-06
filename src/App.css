@@ -1,3 +1,41 @@
+.button {
+  background-color: #666; /* Green */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.button:disabled {
+  background-color: #ddd; /* Green */
+  border: #aaa solid 1px;
+  color: #aaa;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.button-green {
+  background-color: #4CAF50;
+}
+
+.button-blue {
+  background-color: #534caf; 
+}
+
+.button-red {
+  background-color: #af4c4c;
+}
+
+.button-gray {
+  background-color: #aaa;
+}
+
 .App {
   text-align: center;
   margin: 0 auto;
