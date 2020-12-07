@@ -19,11 +19,13 @@ export function ImageSelector() {
    *******************************/
 
   function handleToggleSelect(imageName, isSelected) {
-    isSelected ? dispatch(deselectImage(imageName)) : dispatch(selectImage(imageName))
+    isSelected
+      ? dispatch(deselectImage(imageName))
+      : dispatch(selectImage(imageName));
   }
 
   function handleAddImages() {
-    dispatch(addSelectedImages())
+    dispatch(addSelectedImages());
   }
 
   /*******************************
@@ -31,8 +33,8 @@ export function ImageSelector() {
    *******************************/
 
   function renderImageSelectSlot({ imageName, imageCaption, isSelected }) {
-    const selectedImgClass = isSelected && styles.imageSelectContainerSelected
-    const imgClasses = `${styles.imageSelectImage} ${selectedImgClass}`
+    const selectedImgClass = isSelected && styles.imageSelectContainerSelected;
+    const imgClasses = `${styles.imageSelectImage} ${selectedImgClass}`;
     return (
       <figure
         key={imageName}
@@ -52,21 +54,27 @@ export function ImageSelector() {
   }
 
   function renderAddButton() {
-    return <button className='button button-green' disabled={selectedImages.length === 0} onClick={handleAddImages}>Add</button>
+    return (
+      <button
+        className="button button-green"
+        disabled={selectedImages.length === 0}
+        onClick={handleAddImages}
+      >
+        Add
+      </button>
+    );
   }
 
   return (
-    <div style={{backgroundColor: '#eee', padding: '8px 0', margin: '16px 0'}}>
+    <div className={styles.imageSelectorContainer}>
       <h2>Select images to add to the carousel</h2>
-      <div className={styles.imageSelectorContainer}>
+      <div className={styles.imageSelectionContainer}>
         {inactiveImages.map((image) => {
           return renderImageSelectSlot(image);
         })}
       </div>
-      <br/>
-      <div>
-        {renderAddButton()}
-      </div>
+      <br />
+      <div>{renderAddButton()}</div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { carouselImages } from "../../data/carouselImages.json";
 export const carouselSlice = createSlice({
   name: "carousel",
   initialState: {
+    // Default: show 3 images in the carousel at a time
     size: 3,
     // Add isActive field to show if an images should be shown in the carousel,
     // and an isSelected field if it is selected in either of the modes
@@ -81,11 +82,6 @@ export const carouselSlice = createSlice({
         } else {
           return image;
         }
-        // if (action.payload.includes(image.imageName)) {
-        //   return {...image, isActive: false}
-        // } else {
-        //   return image
-        // }
       });
     },
     /**
@@ -126,32 +122,32 @@ export const getInactiveImages = (state) =>
       return a.imageCaption < b.imageCaption ? -1 : 1;
     });
 
-  export const getSelectedImages = (state) =>
-    state.carousel.images
-      .filter((image) => {
-        return image.isSelected === true;
-      })
-      .sort((a, b) => {
-        return a.imageCaption < b.imageCaption ? -1 : 1;
-      });
+export const getSelectedImages = (state) =>
+  state.carousel.images
+    .filter((image) => {
+      return image.isSelected === true;
+    })
+    .sort((a, b) => {
+      return a.imageCaption < b.imageCaption ? -1 : 1;
+    });
 
-  export const getSelectedInactiveImages = (state) =>
-    state.carousel.images
-      .filter((image) => {
-        return image.isSelected === true && image.isActive === false;
-      })
-      .sort((a, b) => {
-        return a.imageCaption < b.imageCaption ? -1 : 1;
-      });
+export const getSelectedInactiveImages = (state) =>
+  state.carousel.images
+    .filter((image) => {
+      return image.isSelected === true && image.isActive === false;
+    })
+    .sort((a, b) => {
+      return a.imageCaption < b.imageCaption ? -1 : 1;
+    });
 
-  export const getSelectedActiveImages = (state) =>
-    state.carousel.images
-      .filter((image) => {
-        return image.isSelected === true && image.isActive === true;
-      })
-      .sort((a, b) => {
-        return a.imageCaption < b.imageCaption ? -1 : 1;
-      });
+export const getSelectedActiveImages = (state) =>
+  state.carousel.images
+    .filter((image) => {
+      return image.isSelected === true && image.isActive === true;
+    })
+    .sort((a, b) => {
+      return a.imageCaption < b.imageCaption ? -1 : 1;
+    });
 
 export const getSelectedImage = (state) => {
   const activeImages = state.carousel.images
@@ -168,7 +164,7 @@ export const getSelectedImage = (state) => {
   //   throw new Error('More than one selected image');
   // }
   if (selectedActiveImages.length > 0) {
-    return selectedActiveImages[0]
+    return selectedActiveImages[0];
   } else {
     return activeImages[0] || null;
   }
