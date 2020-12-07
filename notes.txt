@@ -1,0 +1,2 @@
+- red paint with space in it. Would rather correct on API side than add into 
+- should the carousel pagination controls go above in view mode?

@@ -1,4 +1,11 @@
 .imageSelectorContainer {
+  background-color: #eee;
+  border-radius: 20px;
+  padding: 8px 0;
+  margin: 16px 0;
+}
+
+.imageSelectionContainer {
   width: 500px;
   display: flex;
   flex-wrap: wrap;
@@ -22,14 +29,22 @@
 }
 
 .imageSelectContainerSelected {
-  border: solid rgb(0, 0, 255) 5px;
+  border: solid rgb(1, 74, 158) 5px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
 
 .carouselContainer {
+  border-top: solid 1px;
+  margin: 16px 0;
+  padding: 16px 0;
   width: 500px;
+}
+
+.carouselImageContainer {
+  width: 500px;
+  padding: 8px 0;
   display: flex;
   flex-wrap: wrap;
 }
@@ -43,7 +58,6 @@
 .carouselImage {
   opacity: 1;
   height: auto;
-  /* transition: .5s ease; */
   backface-visibility: hidden;
 }
 
@@ -86,9 +100,20 @@
   font-size: 16px;
 }
 
+.carouselPaginationButtonActive {
+  color: blue;
+  font-size: 2rem;
+  vertical-align: middle;
+}
+
 .imageViewerContainer {
   width: 500px;
   margin: 0;
+}
+
+.imageViewerImage {
+  border: #eee solid;
+  box-shadow: 5px 5px 10px #eee;
 }
 
 .imageViewerCaption {

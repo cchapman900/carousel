@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectImage,
@@ -12,6 +12,8 @@ import {
 } from "./carouselSlice";
 import { getMode } from "../editor/editorSlice";
 import styles from "./Carousel.module.css";
+import { VIEW } from "../editor/exports";
+import { CAROUSEL_WIDTH } from "./exports";
 
 export function Carousel() {
   const availableCarouselSizes = [2, 3, 4, 5];
@@ -32,18 +34,11 @@ export function Carousel() {
   };
 
   /*******************************
-   * LIFECYCLE METHODS
-   *******************************/
-  useEffect(() => {
-
-  }, [useSelector(getSize)])
-
-  /*******************************
    * HANDLER METHODS
    *******************************/
 
-  function handleToggleSelect(imageName, isSelected) {
-    if (editorMode === "view") {
+  function handleToggleSelectImage(imageName, isSelected) {
+    if (editorMode === VIEW) {
       dispatch(setSelectedImage(imageName));
     } else {
       isSelected
@@ -74,11 +69,10 @@ export function Carousel() {
       i < page * carouselSize + carouselSize;
       i++
     ) {
-      console.log(page, i, carouselSize)
       const slot = activeImages[i];
       slot && carouselImages.push(renderCarouselImage(activeImages[i]));
     }
-    return <div className={styles.carouselContainer}>{carouselImages}</div>;
+    return <div className={`${styles.carouselImageContainer} shadow`}>{carouselImages}</div>;
   }
 
   /**
@@ -86,18 +80,18 @@ export function Carousel() {
    */
   function renderCarouselImage({ imageName, imageCaption, isSelected }) {
     const selectedImgClass = isSelected && styles.imageSelectContainerSelected;
-    const imgClasses = `${styles.carouselImage} ${selectedImgClass}`
+    const imgClasses = `${styles.carouselImage} ${selectedImgClass} ${styles.carouselImageLeftClick}`;
     return (
       <div
         key={imageName}
         className={styles.carouselSlot}
-        onClick={() => handleToggleSelect(imageName, isSelected)}
+        onClick={() => handleToggleSelectImage(imageName, isSelected)}
       >
         <img
           src={`/images/${imageName}`}
           alt={imageCaption}
-          height={500 / carouselSize}
-          width={500 / carouselSize}
+          height={CAROUSEL_WIDTH / carouselSize}
+          width={CAROUSEL_WIDTH / carouselSize}
           className={imgClasses}
         />
         <div className={styles.carouselCaption}>
@@ -114,9 +108,8 @@ export function Carousel() {
       paginationButtons.push(
         <button
           key={`pagination-button-${i}`}
-          style={i === page ? { color: "blue", fontSize: '2rem', verticalAlign: 'middle' } : {}}
           onClick={() => setPage(i)}
-          className={styles.carouselPaginationButton}
+          className={`${styles.carouselPaginationButton} ${i === page && styles.carouselPaginationButtonActive}`}
         >
           &#8226;
         </button>
@@ -145,9 +138,13 @@ export function Carousel() {
     // Dropdown for carousel size
     const carouselSizeSelector = () => {
       return (
-        <div style={{paddingBottom: '8px'}}>
+        <div>
           <label>Carousel size </label>
-          <select className='button button-gray' onChange={handleSetCarouselSize} defaultValue={carouselSize}>
+          <select
+            className={`button button-gray`}
+            onChange={handleSetCarouselSize}
+            defaultValue={carouselSize}
+          >
             {availableCarouselSizes.map((size) => {
               return (
                 <option key={`option-${size}`} value={size}>
@@ -163,7 +160,7 @@ export function Carousel() {
     const deleteImageButton = () => {
       return (
         <button
-          className='button button-red'
+          className="button button-red"
           disabled={selectedImages.length === 0}
           onClick={handleRemoveImages}
         >
@@ -183,10 +180,14 @@ export function Carousel() {
    * Top-level element
    */
   if (activeImages.length === 0) {
-    return <div>This carousel is empty</div>;
+    return (
+      <div className={styles.carouselContainer}>
+        This carousel is empty
+      </div>
+    );
   } else {
     return (
-      <div style={{padding: '16px 0'}}>
+      <div className={styles.carouselContainer}>
         {editorMode === "edit" && renderEditorToolbar()}
         {renderCarousel()}
         {renderPaginationControls()}

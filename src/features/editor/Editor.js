@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearSelectedImages,
@@ -9,6 +9,8 @@ import { setEditMode, setViewMode, getMode } from "./editorSlice";
 import { ImageSelector } from "../carousel/ImageSelector";
 import { ImageViewer } from "../carousel/ImageViewer";
 import { Carousel } from "../carousel/Carousel";
+import { EDIT, VIEW } from "./exports";
+import "./Editor.css";
 
 export function Editor() {
   const mode = useSelector(getMode);
@@ -18,14 +20,16 @@ export function Editor() {
   /*******************************
    * HANDLER METHODS
    *******************************/
-  function handleSetEditMode() {
-    dispatch(clearSelectedImages());
-    dispatch(setEditMode());
-  }
-  function handleSetViewMode() {
-    dispatch(clearSelectedImages());
-    dispatch(setSelectedImage(activeImages[0]));
-    dispatch(setViewMode());
+
+  function handleToggleEditorMode(event) {
+    if (mode === EDIT) {
+      dispatch(clearSelectedImages());
+      dispatch(setSelectedImage(activeImages[0]));
+      dispatch(setViewMode());
+    } else {
+      dispatch(clearSelectedImages());
+      dispatch(setEditMode());
+    }
   }
 
   /*******************************
@@ -33,21 +37,26 @@ export function Editor() {
    *******************************/
 
   function renderEditorToolbar() {
-    return mode === "view" ? (
-      <button onClick={handleSetEditMode} className={'button'}>Edit</button>
-    ) : (
-      <button onClick={handleSetViewMode} className={'button'}>View</button>
-    );
+    return (
+      <div className='editorToolbar'>
+        <span style={{fontWeight: mode === EDIT ? 'bold' : 'normal'}}>Edit</span>
+        <label class="switch">
+          <input type="checkbox" onChange={handleToggleEditorMode} checked={mode === VIEW}/>
+          <span class="slider round"></span>
+        </label>
+        <span style={{fontWeight: mode === VIEW ? 'bold' : 'normal'}}>View</span>
+      </div>
+    )
   }
 
   return (
-    <div style={{margin: '16px 0'}}>
-      <div style={{textAlign: 'right'}}>
+    <div className='editorContainer'>
+      <div className='editorModeButtonContainer'>
         {renderEditorToolbar()}
       </div>
-      {mode === "edit" && <ImageSelector />}
+      {mode === EDIT && <ImageSelector />}
       <Carousel />
-      {mode === "view" && <ImageViewer />}
+      {mode === VIEW && <ImageViewer />}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 .button {
-  background-color: #666; /* Green */
+  background-color: #666;
   border: none;
+  border-radius: 16px;
   color: white;
   padding: 8px 16px;
   text-align: center;
@@ -10,7 +11,7 @@
 }
 
 .button:disabled {
-  background-color: #ddd; /* Green */
+  background-color: #ddd; 
   border: #aaa solid 1px;
   color: #aaa;
   padding: 8px 16px;

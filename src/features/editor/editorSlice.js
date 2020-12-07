@@ -1,16 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { EDIT, VIEW } from './exports';
 
 export const editorSlice = createSlice({
   name: 'editor',
   initialState: {
-    mode: 'edit',
+    mode: EDIT,
   },
   reducers: {
     setViewMode: state => {
-      state.mode = 'view';
+      state.mode = VIEW;
     },
     setEditMode: state => {
-      state.mode = 'edit';
+      state.mode = EDIT;
     },
   },
 });
