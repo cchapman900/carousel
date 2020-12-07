@@ -91,6 +91,7 @@
 
 .carouselPaginationButton {
   background: none;
+  cursor: pointer;
   border: none;
   color: #333;
   padding: 0 10px;

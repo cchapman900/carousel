@@ -72,7 +72,7 @@ export function Carousel() {
       const slot = activeImages[i];
       slot && carouselImages.push(renderCarouselImage(activeImages[i]));
     }
-    return <div className={`${styles.carouselImageContainer} shadow`}>{carouselImages}</div>;
+    return <div className={styles.carouselImageContainer}>{carouselImages}</div>;
   }
 
   /**

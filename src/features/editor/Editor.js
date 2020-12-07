@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearSelectedImages,
@@ -40,9 +40,9 @@ export function Editor() {
     return (
       <div className='editorToolbar'>
         <span style={{fontWeight: mode === EDIT ? 'bold' : 'normal'}}>Edit</span>
-        <label class="switch">
+        <label className="switch">
           <input type="checkbox" onChange={handleToggleEditorMode} checked={mode === VIEW}/>
-          <span class="slider round"></span>
+          <span className="slider round"></span>
         </label>
         <span style={{fontWeight: mode === VIEW ? 'bold' : 'normal'}}>View</span>
       </div>
